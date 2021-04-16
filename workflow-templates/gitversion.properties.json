@@ -1,0 +1,11 @@
+{
+    "name": "gitversion",
+    "description": "Checks the gitVersion",
+    "iconName": "cloud-tek",
+    "categories": [
+        "dotnet gitversion"
+    ],
+    "filePatterns": [
+        ".*\\.md$"
+    ]
+}
