@@ -23,7 +23,7 @@ on:
 
 jobs:
   build:
-    uses: cloud-tek/.github/.github/workflows/dagger-cloudtek-build@v1
+    uses: cloud-tek/.github/.github/workflows/dagger-cloudtek-build@v0.1.0
     name: build
     with:
       Directory: .
