@@ -1,4 +1,4 @@
-name: "nuke"
+name: "dagger"
 on:
   workflow_call:
     secrets:
