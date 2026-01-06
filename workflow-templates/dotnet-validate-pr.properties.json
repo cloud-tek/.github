@@ -1,0 +1,12 @@
+{
+    "name": "dotnet PR validation",
+    "description": "Executes a PR validation workflow for .NET projects in cloud-tek organization, using .NET and Dagger.",
+    "iconName": "feed-pull-request-open",
+    "categories": [
+        "dotnet",
+        "dagger"
+    ],
+    "filePatterns": [
+        ".*\\.sln$"
+    ]
+}
