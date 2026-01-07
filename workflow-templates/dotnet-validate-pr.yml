@@ -10,14 +10,12 @@ on:
     - synchronize
     - reopened
     branches:
-    - main
-    - release/*
+    - $default-branch
     paths:
       - ".github/workflows/**"
-      - "hive.core/**"
-      - "hive.microservices/**"
-      - "hive.logging/**"
-      - "GitVersion.yml"
+      - "*.sln"
+      - "**/*.*sproj"
+      - "**/*.cs"
   workflow_dispatch:
     inputs: {}
 
