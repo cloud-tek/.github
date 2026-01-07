@@ -1,0 +1,11 @@
+{
+    "name": "claude code review",
+    "description": "Executes a PR Code Review using Claude AI model",
+    "iconName": "octicon comment-ai",
+    "categories": [
+        "claude"
+    ],
+    "filePatterns": [
+        "CLAUDE.md$"
+    ]
+}

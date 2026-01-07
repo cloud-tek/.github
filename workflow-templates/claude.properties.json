@@ -1,0 +1,11 @@
+{
+    "name": "claude",
+    "description": "Makes Claude react to @claude comments in PRs",
+    "iconName": "octicon ai-model",
+    "categories": [
+        "claude"
+    ],
+    "filePatterns": [
+        "CLAUDE.md$"
+    ]
+}
