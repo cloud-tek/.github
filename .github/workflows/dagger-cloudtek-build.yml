@@ -111,7 +111,7 @@ jobs:
           echo "${{ env.VAR_ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
 
       - name: upload-artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
         with:
           name: ${{ env.VAR_ARTIFACT_NAME }}
