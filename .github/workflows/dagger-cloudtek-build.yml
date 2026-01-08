@@ -95,7 +95,7 @@ jobs:
             --toolVersion ${{ inputs.cloudtek-build-version }}
             --sdkVersion ${{ inputs.net-sdk-version }}
             --buildNumber ${{ github.run_number }}
-            --collectCoverage true
+            --collectCoverage
             --auto-apply
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
