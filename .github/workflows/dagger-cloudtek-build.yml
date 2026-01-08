@@ -108,10 +108,10 @@ jobs:
       - name: set artifact name
         id: artifact-name
         run: |
-          echo "${{ env.VAR_ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
+          echo "name=${{ env.VAR_ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
 
       - name: upload-artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v5
         if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
         with:
           name: ${{ env.VAR_ARTIFACT_NAME }}
