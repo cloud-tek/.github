@@ -2,7 +2,7 @@ name: "dagger"
 on:
   workflow_call:
     outputs:
-      ArtifactName:
+      artifact-name:
         description: "The name of the uploaded artifact"
         value: ${{ jobs.dagger.outputs.artifact-name }}
     secrets:
@@ -19,36 +19,36 @@ on:
         description: "dagger@cloud-tek.io key"
         required: true
     inputs:
-      Directory:
+      directory:
         description: "Project directory"
         type: string
         required: true
-      NetVersion:
+      net-version:
         description: ".NET version"
         type: string
         default: "10.0"
         required: false
-      NetSdkVersion:
+      net-sdk-version:
         description: ".NET SDK version"
         type: string
         default: "10.0.100"
         required: false
-      DaggerModule:
+      dagger-module:
         description: "Dagger Module"
         type: string
         default: "github.com/cloud-tek/dagger/dotnet/cloudtek-build@v0.2.0"
         required: false
-      CloudTekBuildVersion:
+      cloudtek-build-version:
         description: "CloudTek.Build.Tool version"
         type: string
         default: "10.0.0"
         required: false
-      Target:
+      target:
         description: "NUKE Target"
         type: string
         default: "All"
         required: false
-      Skip:
+      skip:
         description: "NUKE Skip Targets"
         type: string
         default: ""
@@ -80,20 +80,20 @@ jobs:
           if [ -f "${{ github.workspace }}/global.json" ]; then
             echo "global.json exists"
           else
-            echo "{ \"tools\": { \"dotnet\": \"${{ inputs.NetSdkVersion }}\" } }" > ${{ github.workspace }}/global.json
+            echo "{ \"tools\": { \"dotnet\": \"${{ inputs.net-sdk-version }}\" } }" > ${{ github.workspace }}/global.json
           fi
       - name: dagger call
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: "latest"
-          module: ${{ inputs.DaggerModule }}
+          module: ${{ inputs.dagger-module }}
           args: >-
             build
-            --source ${{ github.workspace }}/${{ inputs.Directory }}
-            --target ${{ inputs.Target }}
-            --skip "${{ inputs.Skip }}"
-            --toolVersion ${{ inputs.CloudTekBuildVersion }}
-            --sdkVersion ${{ inputs.NetSdkVersion }}
+            --source ${{ github.workspace }}/${{ inputs.directory }}
+            --target ${{ inputs.target }}
+            --skip "${{ inputs.skip }}"
+            --toolVersion ${{ inputs.cloudtek-build-version }}
+            --sdkVersion ${{ inputs.net-sdk-version }}
             --auto-apply
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
@@ -101,7 +101,7 @@ jobs:
         run: |
           tree ${{ github.workspace }}/results
       - name: tree artifacts
-        if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
+        if: ${{ !(contains(inputs.skip, 'Pack') && contains(inputs.skip, 'Publish')) }}
         run: |
           tree ${{ github.workspace }}/artifacts
 
@@ -112,7 +112,7 @@ jobs:
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v5
-        if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
+        if: ${{ !(contains(inputs.skip, 'Pack') && contains(inputs.skip, 'Publish')) }}
         with:
           name: ${{ env.VAR_ARTIFACT_NAME }}
           path: ${{ github.workspace }}/artifacts
