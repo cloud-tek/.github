@@ -59,7 +59,9 @@ Located in `.github/workflows/`, these can be called from other repositories usi
   2. Configure git for SSH access to private repos
   3. Setup SSH agent with private key
   4. Create/verify `global.json` for .NET SDK version
-  5. Run Dagger build module
+  5. Run Dagger build module with:
+     - Build number from `github.run_number`
+     - Code coverage collection enabled
   6. Upload build artifacts to `artifacts/` (unless Pack/Publish skipped)
   7. Display results and artifacts trees
   8. Generate XUnit test report from `.trx` files
