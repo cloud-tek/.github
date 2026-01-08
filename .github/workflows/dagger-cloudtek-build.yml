@@ -1,6 +1,10 @@
 name: "dagger"
 on:
   workflow_call:
+    outputs:
+      ArtifactName:
+        description: "The name of the uploaded artifact"
+        value: ${{ jobs.dagger.outputs.artifact-name }}
     secrets:
       NUGET_API_KEY:
         description: "NuGet API Key"
@@ -54,7 +58,10 @@ jobs:
   dagger:
     name: dagger
     runs-on: ubuntu-latest
-    env: {}
+    outputs:
+      artifact-name: ${{ steps.artifact-name.outputs.name }}
+    env:
+      VAR_ARTIFACT_NAME: artifacts
     steps:
       - uses: actions/checkout@v5
         with:
@@ -94,8 +101,23 @@ jobs:
         run: |
           tree ${{ github.workspace }}/results
       - name: tree artifacts
+        if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
         run: |
           tree ${{ github.workspace }}/artifacts
+
+      - name: set artifact name
+        id: artifact-name
+        run: |
+          echo "${{ env.VAR_ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ !(contains(inputs.Skip, 'Pack') && contains(inputs.Skip, 'Publish')) }}
+        with:
+          name: ${{ env.VAR_ARTIFACT_NAME }}
+          path: ${{ github.workspace }}/artifacts
+          if-no-files-found: error
+
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: (success() || failure())
