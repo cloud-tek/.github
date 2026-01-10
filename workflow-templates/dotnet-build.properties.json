@@ -1,0 +1,12 @@
+{
+    "name": "dotnet build",
+    "description": "Executes a build workflow for .NET projects in cloud-tek organization, using .NET and Dagger. Will emit artifacts on gh release or manual runs",
+    "iconName": "octicon package",
+    "categories": [
+        "dotnet",
+        "dagger"
+    ],
+    "filePatterns": [
+        ".*\\.sln$"
+    ]
+}
