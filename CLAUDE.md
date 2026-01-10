@@ -66,6 +66,22 @@ Located in `.github/workflows/`, these can be called from other repositories usi
   7. Display results and artifacts trees
   8. Generate XUnit test report from `.trx` files
 
+**dotnet-push.yml**: Reusable workflow for pushing .NET packages to NuGet
+- Called via `workflow_call` with inputs and secrets
+- Configurable inputs:
+  - `artifact-name`: Name of the artifact containing packed packages (required)
+  - `artifact-path`: Path to packages inside the artifact (required)
+  - `nuget-api-url`: NuGet API URL (default: "https://api.nuget.org/v3/index.json")
+  - `net-version`: .NET version (default: "10.0")
+  - `net-sdk-version`: .NET SDK version (default: "10.0.100")
+- Secrets:
+  - `NUGET_API_KEY`: NuGet API key for authentication (optional)
+- Steps:
+  1. Download artifact containing packages
+  2. Display artifacts tree for debugging
+  3. Setup .NET SDK with specified version
+  4. Push each package to NuGet with `--skip-duplicate` flag
+
 ## Common Workflows
 
 ### Adding a New Workflow Template
