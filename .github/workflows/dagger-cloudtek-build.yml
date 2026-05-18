@@ -53,7 +53,7 @@ on:
         type: string
         default: ""
         required: false
-      with-docker:
+      docker-socket:
         description: "Enable Docker-in-Docker for the build (e.g. for Testcontainers)"
         type: boolean
         default: false
@@ -101,7 +101,7 @@ jobs:
             --sdkVersion ${{ inputs.net-sdk-version }}
             --buildNumber ${{ github.run_number }}
             --collectCoverage
-            ${{ inputs.with-docker && '--withDocker' || '' }}
+            ${{ inputs.docker-socket && '--docker-socket=/var/run/docker.sock' || '' }}
             export --path ${{ github.workspace }}/${{ inputs.directory }}
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
