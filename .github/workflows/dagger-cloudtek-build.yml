@@ -53,6 +53,11 @@ on:
         type: string
         default: ""
         required: false
+      with-docker:
+        description: "Enable Docker-in-Docker for the build (e.g. for Testcontainers)"
+        type: boolean
+        default: false
+        required: false
 
 jobs:
   dagger:
@@ -96,6 +101,7 @@ jobs:
             --sdkVersion ${{ inputs.net-sdk-version }}
             --buildNumber ${{ github.run_number }}
             --collectCoverage
+            ${{ inputs.with-docker && '--withDocker' || '' }}
             export --path ${{ github.workspace }}/${{ inputs.directory }}
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
