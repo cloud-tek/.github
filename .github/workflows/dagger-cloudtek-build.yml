@@ -101,7 +101,7 @@ jobs:
             --sdkVersion ${{ inputs.net-sdk-version }}
             --buildNumber ${{ github.run_number }}
             --collectCoverage
-            ${{ inputs.docker-socket && '--docker-socket=/var/run/docker.sock' || '' }}
+            ${{ inputs.docker-socket && '--with-docker' || '' }}
             export --path ${{ github.workspace }}/${{ inputs.directory }}
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
