@@ -87,6 +87,16 @@ jobs:
           else
             echo "{ \"tools\": { \"dotnet\": \"${{ inputs.net-sdk-version }}\" } }" > ${{ github.workspace }}/global.json
           fi
+      # Authenticate to registry.dagger.io (a Fly.io proxy fronting ghcr.io) so the Dagger
+      # engine image is pulled with credentials. Anonymous pulls from GitHub Actions' shared
+      # runner egress IPs get rate-limited/tarpitted, surfacing as the engine provisioning
+      # timing out: 'Get "https://registry.dagger.io/v2/": Client.Timeout exceeded'.
+      - name: 'docker login (dagger engine registry)'
+        uses: docker/login-action@v3
+        with:
+          registry: registry.dagger.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
       - name: dagger call
         uses: dagger/dagger-for-github@v8.2.0
         with:
