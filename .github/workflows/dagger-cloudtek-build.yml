@@ -87,10 +87,27 @@ jobs:
           else
             echo "{ \"tools\": { \"dotnet\": \"${{ inputs.net-sdk-version }}\" } }" > ${{ github.workspace }}/global.json
           fi
+      # registry.dagger.io is unreachable from GitHub Actions runners (connection timeouts on
+      # GET /v2/). Prime the engine from cloud-tek's ghcr mirror (ghcr.io IS reachable) by
+      # pulling it and retagging to the exact ref the Dagger CLI provisioner looks for. The
+      # provisioner does `docker image inspect registry.dagger.io/engine:<ver>` first and only
+      # pulls on a cache miss, so with the image present locally it never contacts the network.
+      - name: 'docker login (ghcr.io engine mirror)'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+      - name: 'prime dagger engine from ghcr mirror'
+        shell: bash
+        run: |
+          docker pull ghcr.io/cloud-tek/dagger-engine:v0.21.7
+          docker tag ghcr.io/cloud-tek/dagger-engine:v0.21.7 registry.dagger.io/engine:v0.21.7
       - name: dagger call
         uses: dagger/dagger-for-github@v8.2.0
         with:
-          version: "latest"
+          # CLI version MUST match the primed engine tag (registry.dagger.io/engine:v0.21.7).
+          version: "v0.21.7"
           module: ${{ inputs.dagger-module }}
           args: >-
             build
