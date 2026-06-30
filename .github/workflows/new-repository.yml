@@ -1,0 +1,142 @@
+name: "new-repository"
+
+# Creates a new repository in the current organization, enforcing the naming
+# convention documented in profile/repository-naming.md:
+#
+#   {project-slug}[-layer][-domain][-desc]-{type}
+#
+on:
+  workflow_dispatch:
+    inputs:
+      project-slug:
+        description: "Project / system identifier (e.g. idp, abc, poc). Required."
+        type: string
+        required: true
+      layer:
+        description: "Architectural tier. Strictly limited to be | fe (or none)."
+        type: choice
+        required: true
+        default: "none"
+        options:
+          - "none"
+          - "be"
+          - "fe"
+      domain:
+        description: "Technical, language or business domain (e.g. azure, k8s, npm, payments). Optional."
+        type: string
+        required: false
+        default: ""
+      desc:
+        description: "Contextual modifier / sub-domain to avoid collisions (e.g. pipeline, sync, chat). Optional."
+        type: string
+        required: false
+        default: ""
+      type:
+        description: "Final artifact type. Required."
+        type: choice
+        required: true
+        options:
+          - "pkg"
+          - "app"
+          - "doc"
+          - "api"
+          - "svc"
+          - "job"
+          - "fnc"
+          - "cfg"
+          - "state"
+          - "templates"
+          - "seed"
+      visibility:
+        description: "Repository visibility."
+        type: choice
+        required: true
+        default: "private"
+        options:
+          - "private"
+          - "internal"
+          - "public"
+      repo-description:
+        description: "Short description for the new repository. Optional."
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  new-repository:
+    name: new-repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: build-and-validate-name
+        id: name
+        shell: bash
+        env:
+          PROJECT_SLUG: ${{ inputs.project-slug }}
+          LAYER: ${{ inputs.layer }}
+          DOMAIN: ${{ inputs.domain }}
+          DESC: ${{ inputs.desc }}
+          TYPE: ${{ inputs.type }}
+        run: |
+          set -euo pipefail
+
+          # Each segment must be lowercase alphanumeric (hyphens are the segment
+          # separators, so they are not allowed *inside* a segment).
+          segment_re='^[a-z0-9]+$'
+
+          fail() { echo "::error::$1"; exit 1; }
+
+          [[ "$PROJECT_SLUG" =~ $segment_re ]] \
+            || fail "project-slug '$PROJECT_SLUG' must be lowercase alphanumeric (no spaces, hyphens or underscores)."
+
+          [[ "$TYPE" =~ $segment_re ]] \
+            || fail "type '$TYPE' is invalid."
+
+          name="$PROJECT_SLUG"
+
+          if [[ "$LAYER" != "none" && -n "$LAYER" ]]; then
+            [[ "$LAYER" == "be" || "$LAYER" == "fe" ]] \
+              || fail "layer '$LAYER' is strictly limited to be | fe."
+            name="$name-$LAYER"
+          fi
+
+          if [[ -n "$DOMAIN" ]]; then
+            [[ "$DOMAIN" =~ $segment_re ]] \
+              || fail "domain '$DOMAIN' must be lowercase alphanumeric."
+            name="$name-$DOMAIN"
+          fi
+
+          if [[ -n "$DESC" ]]; then
+            [[ "$DESC" =~ $segment_re ]] \
+              || fail "desc '$DESC' must be lowercase alphanumeric."
+            name="$name-$DESC"
+          fi
+
+          name="$name-$TYPE"
+
+          echo "Resolved repository name: $name"
+          echo "repo-name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: create-repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.CLOUDTEK_AUTOMATION_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ steps.name.outputs.repo-name }}
+          VISIBILITY: ${{ inputs.visibility }}
+          REPO_DESCRIPTION: ${{ inputs.repo-description }}
+        run: |
+          set -euo pipefail
+
+          target="$OWNER/$REPO_NAME"
+
+          if gh repo view "$target" >/dev/null 2>&1; then
+            echo "::error::Repository $target already exists."
+            exit 1
+          fi
+
+          echo "Creating $target (visibility: $VISIBILITY) ..."
+          gh repo create "$target" \
+            "--$VISIBILITY" \
+            ${REPO_DESCRIPTION:+--description "$REPO_DESCRIPTION"}
+
+          echo "### :rocket: Created repository [\`$target\`](https://github.com/$target)" >> "$GITHUB_STEP_SUMMARY"
