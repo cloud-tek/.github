@@ -14,6 +14,8 @@ Welcome to **cloud-tek** — we build cloud-native platforms, tooling, and bluep
 
 Consistency is part of how we scale. Before creating a new repository, please read our:
 
+🗂️ **[Metadata Management](metadata.md)** — the single source of truth for project names and slugs that anchor every resource across the platform.
+
 📐 **[Repository Naming Convention](repository-naming.md)** — the rules and rationale behind how we name repositories across the organization.
 
 ## Get in touch
