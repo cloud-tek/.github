@@ -1,0 +1,21 @@
+# cloud-tek
+
+Welcome to **cloud-tek** — we build cloud-native platforms, tooling, and blueprints that help teams ship faster on solid, well-paved infrastructure.
+
+🌐 [cloud-tek.io](https://cloud-tek.io)
+
+## What we work on
+
+- **Platform & developer experience** — internal developer platforms, golden-path templates, and reusable CI/CD building blocks.
+- **Cloud-native services** — backend services, APIs, and serverless functions across Azure, Kubernetes, and Cloudflare.
+- **Shared libraries & tooling** — cross-project packages that keep our stacks consistent and maintainable.
+
+## Conventions
+
+Consistency is part of how we scale. Before creating a new repository, please read our:
+
+📐 **[Repository Naming Convention](repository-naming.md)** — the rules and rationale behind how we name repositories across the organization.
+
+## Get in touch
+
+Find us at [cloud-tek.io](https://cloud-tek.io).
