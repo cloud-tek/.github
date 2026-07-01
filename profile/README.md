@@ -10,6 +10,10 @@ Welcome to **cloud-tek** — we build cloud-native platforms, tooling, and bluep
 - **Cloud-native services** — backend services, APIs, and serverless functions across Azure, Kubernetes, and Cloudflare.
 - **Shared libraries & tooling** — cross-project packages that keep our stacks consistent and maintainable.
 
+## Featured projects
+
+🎨 **[design-system](https://github.com/cloud-tek/design-system)** — the cloud-tek design system and Storybook. A TypeScript component library and living style guide that gives our frontends a consistent, reusable UI foundation.
+
 ## Conventions
 
 Consistency is part of how we scale. Before creating a new repository, please read our:
