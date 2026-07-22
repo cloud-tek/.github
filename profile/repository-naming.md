@@ -50,9 +50,11 @@ The following repositories can be created per-project, without having to follow 
 | `job` | A one-time fire & forget job / cron |
 | `fnc` | A serverless function |
 | `cfg` | Configuration management |
+| `img` | An image (docker, vm) |
+| `module`| A module |
 | `state` | Infrastructure state (e.g., Terraform state) |
 | `templates` | CI/CD Templates (Multiple reusable pipeline building blocks) |
-| `seed` | A full boilerplate application starter kit (source code + pre-configured pipeline) |
+| `seed` | A full boilerplate repository starter kit (source code + pre-configured pipeline) |
 
 ---
 
