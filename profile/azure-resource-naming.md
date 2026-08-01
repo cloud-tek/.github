@@ -66,7 +66,8 @@ The qualifier is the degree of freedom for avoiding clashes. Typical uses:
 - **Deployment variants** — `blue`, `grn`, `cnry`.
 - **Uniqueness token** — for **globally-unique types** (Storage Account, Container
   Registry, Key Vault, Cosmos DB account, Web App, Function App, Service Bus and
-  Event Hub namespaces), the qualifier may carry a deterministic 4-char token derived
+  Event Hub namespaces, SQL Server, PostgreSQL Flexible Server, Azure Cache for Redis,
+  API Management, Traffic Manager), the qualifier may carry a deterministic 4-char token derived
   from the subscription id (e.g. first 4 chars of a hash). This resolves cross-tenant
   name collisions without manual invention and is stable across Terraform runs.
 
@@ -133,10 +134,34 @@ separator. Types marked **satellite** may carry a `target` segment.
 | Route Table                | `rt`     | CAF    | CAF reserves `udr` for routes *within* a table. |
 | Network Interface          | `nic`    | CAF    | **Satellite.** |
 | Private Endpoint           | `pep`    | CAF    | **Satellite.** |
+| NAT Gateway                | `ng`     | CAF    | |
+| Public IP                  | `pip`    | CAF    | |
+| Subnet                     | `snet`   | CAF    | Scoped to VNet. |
+| Load Balancer              | `lb`     | CAF    | CAF also defines `lbi`/`lbe` for internal/external. |
+| Application Gateway        | `agw`    | CAF    | |
+| Firewall Policy            | `afwp`   | CAF    | Azure Firewall itself (`afw`) not yet added. |
+| Front Door Profile         | `afd`    | CAF    | |
+| CDN Profile                | `cdnp`   | CAF    | |
+| Traffic Manager Profile    | `traf`   | CAF    | Globally unique. |
+| Bastion                    | `bas`    | CAF    | |
+| ExpressRoute Gateway       | `ergw`   | ext    | CAF uses `vgw` for virtual network gateways. |
+| Connection                 | `con`    | CAF    | Scoped to gateway. |
+| Private DNS Zone           | `pdnsz`  | CAF    | |
+| DNS Zone                   | `dnsz`   | CAF    | |
+| Network Watcher            | `nw`     | ext    | |
 | Key Vault                  | `kv`     | CAF    | Globally unique. 24-char limit — **design ceiling**, see Validation. |
 | User Assigned Identity     | `id`     | CAF    | |
 | Container Registry         | `cr`     | CAF    | **No-hyphen.** Globally unique. |
 | Storage Account            | `st`     | CAF    | **No-hyphen.** Globally unique. 24-char limit. |
+| Blob Container             | `blob`   | ext    | Scoped to storage account. |
+| File Share                 | `share`  | ext    | Scoped to storage account. |
+| Storage Queue              | `stq`    | ext    | Scoped to storage account. |
+| Storage Table              | `stt`    | ext    | **No-hyphen.** Scoped; alphanumeric only, leading letter. |
+| SQL Server                 | `sql`    | CAF    | Globally unique. |
+| SQL Database               | `sqldb`  | CAF    | Scoped to server. |
+| PostgreSQL Flexible Server | `psql`   | CAF    | Globally unique. |
+| Azure Cache for Redis      | `redis`  | CAF    | Globally unique. |
+| Data Factory               | `adf`    | CAF    | |
 | Log Analytics Workspace    | `log`    | CAF    | |
 | Application Insights       | `appi`   | CAF    | |
 | Service Bus Namespace      | `sbns`   | CAF    | Globally unique. Requires leading letter. |
@@ -145,6 +170,10 @@ separator. Types marked **satellite** may carry a `target` segment.
 | Event Hub Namespace        | `evhns`  | CAF    | Globally unique. Requires leading letter. |
 | Event Hub                  | `evh`    | CAF    | Scoped to namespace; hyphens legal, standard type. |
 | Event Hub Auth Rule        | `evhar`  | ext    | Scoped to parent. |
+| Event Grid Topic           | `evgt`   | CAF    | |
+| Event Grid Domain          | `evgd`   | CAF    | |
+| Notification Hub           | `ntf`    | CAF    | Scoped to namespace. |
+| API Management             | `apim`   | CAF    | Globally unique. |
 | Cosmos DB Account (NoSQL)  | `cosno`  | CAF    | Globally unique. CAF distinguishes account kinds. |
 | Cosmos SQL Database        | `cosmos` | CAF    | CAF assigns `cosmos` to the *database*, not the account. |
 | Cosmos SQL Container       | `coscon` | ext    | Scoped to database. |
@@ -153,9 +182,18 @@ separator. Types marked **satellite** may carry a `target` segment.
 | Function App               | `func`   | CAF    | Same ARM type as Web App (`Microsoft.Web/sites`, kind `functionapp`); same rules. Globally unique. See caveats. |
 | Container App              | `ca`     | CAF    | 2–32 chars, lowercase/numbers/hyphens, leading letter. Worst case 23 ✓. |
 | Container Apps Environment | `cae`    | CAF    | |
+| AKS Cluster                | `aks`    | CAF    | |
+| VM Scale Set               | `vmss`   | CAF    | |
+| Availability Set           | `avail`  | CAF    | |
+| Managed Disk               | `disk`   | CAF    | |
+| Static Web App             | `stapp`  | CAF    | |
 | Action Group               | `ag`     | CAF    | |
 | Metric Alert               | `mal`    | ext    | Distinct from Activity Log Alert. **Satellite.** |
 | Activity Log Alert         | `alal`   | ext    | **Satellite.** |
+| App Configuration          | `appcs`  | CAF    | |
+| Recovery Services Vault    | `rsv`    | CAF    | |
+| Dashboard                  | `dash`   | ext    | |
+| Data Collection Rule       | `dcr`    | CAF    | |
 | Management Lock            | `lck`    | ext    | |
 
 **Role Assignment is intentionally absent.** ARM names role assignments with GUIDs and
