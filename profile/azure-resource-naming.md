@@ -47,7 +47,7 @@ name = lower( body + type )          # no-hyphen types (see table)
 | Segment       | Required | Length | Charset    | Rules |
 |---------------|----------|--------|------------|-------|
 | `project`     | yes      | 3–5    | `[a-z0-9]` | Must start with a letter. |
-| `environment` | yes      | 3      | enum       | One of: `dev`, `tst`, `uat`, `prd`. No other values, ever. |
+| `environment` | yes      | 3      | enum       | One of the environment codes below. No other values, ever. |
 | `module`      | yes      | 3–5    | `[a-z0-9]` | Business module / workload within the project. |
 | `target`      | no       | 2–10   | `[a-z0-9]` | **Satellite types only.** Type code of the associated resource, plus that resource's qualifier if it has one. |
 | `qualifier`   | no       | 1–4    | `[a-z0-9]` | Optional disambiguator. Empty by default. |
@@ -89,6 +89,21 @@ types** may carry a `target` segment identifying the resource they point at:
 Satellite types all have generous Azure limits (64–260 chars), so the extra segment
 never threatens the length budget: worst case `5+3+5+10+4+3` body `+ "-pep"` = 34.
 The 24-char types (Storage Account, Key Vault) are never satellites.
+
+## Environment codes
+
+| Code  | Environment           | Purpose |
+|-------|-----------------------|---------|
+| `poc` | Proof of concept      | Throwaway experiments and spikes; not a promotion target. |
+| `ops` | Operations / IaC      | Shared platform and infrastructure-as-code resources not tied to a single app stage. |
+| `dev` | Development           | Day-to-day engineering environment. |
+| `tst` | Test                  | Automated and integration testing. |
+| `prf` | Performance testing   | Load, stress, and performance benchmarking. |
+| `stg` | Staging               | Production-like pre-release validation. |
+| `prd` | Production            | Live, customer-facing environment. |
+
+The environment code is exactly 3 characters and comes from this closed set. New
+environments are added here as 3-char codes before they may appear in a name.
 
 ## Region short codes
 
@@ -276,7 +291,7 @@ source of truth:
 | Tag           | Value                         |
 |---------------|-------------------------------|
 | `project`     | full project name             |
-| `environment` | `dev` / `tst` / `uat` / `prd` |
+| `environment` | one of the environment codes   |
 | `module`      | module name                   |
 | `owner`       | owning team or person         |
 
