@@ -22,6 +22,8 @@ Consistency is part of how we scale. Before creating a new repository, please re
 
 📐 **[Repository Naming Convention](repository-naming.md)** — the rules and rationale behind how we name repositories across the organization.
 
+☁️ **[Azure Resource Naming Convention](azure-resource-naming.md)** — the segment-based pattern for naming Azure resources consistently across projects and environments.
+
 ## Get in touch
 
 Find us at [cloud-tek.io](https://cloud-tek.io).
